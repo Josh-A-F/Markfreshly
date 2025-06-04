@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Registro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            padding: 40px;
+            text-align: center;
+        }
+
+        form {
+            display: inline-block;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        input, select {
+            width: 250px;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #34495e;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+
+    <script>
+        function soloNumeros(e) {
+            const tecla = e.key;
+            if (!/^\d$/.test(tecla)) {
+                e.preventDefault();
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Registro de Usuario</h2>
+    <form action="registro.php" method="POST">
+        <input type="hidden" name="usuario" value="1">
+
+        <input type="text" name="nombre" placeholder="Nombre" required><br>
+        <input type="text" name="apellido" placeholder="Apellido" required><br>
+
+        <input type="email" name="correo" placeholder="Correo electrónico" required 
+               pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
+               title="El correo debe ser de tipo @gmail.com"><br>
+
+        <input type="text" name="direccion" placeholder="Dirección" required><br>
+
+        <input type="text" name="celular" placeholder="Celular" required 
+               pattern="[0-9]{7,15}" 
+               title="Solo números. Mínimo 7 y máximo 15 dígitos"
+               onkeypress="soloNumeros(event)"><br>
+
+        <input type="password" name="contraseña" placeholder="Contraseña" required><br>
+
+        <select name="id_rol" required>
+            <option value="">Selecciona un rol</option>
+            <option value="1">Administrador</option>
+            <option value="2">Explorador</option>
+            <option value="3">Emprendedor</option>
+        </select><br>
+
+        <input type="submit" value="Registrar">
+    </form>
+</body>
+</html>
