@@ -1,1 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Producto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #063f3c;
+            margin-bottom: 40px; 
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        label {
+            font-size: 1.1em;
+            color: #333;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        textarea,
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%; 
+            font-size: 1.1em;
+            background-color: #f9f9f9;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        input[type="submit"] {
+            padding: 12px 20px;
+            background-color: #119e97;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        input:invalid,
+        textarea:invalid {
+            border-color: #1b1da0;
+        }
+    </style>
+</head>
+<body>
 
+    <div class="container">
+        <h1>Formulario para Agregar Producto</h1>
+
+        <form action="agregar_producto.php" method="POST" enctype="multipart/form-data">
+            <label for="Nombre_Producto">Nombre del Producto:</label>
+            <input type="text" id="Nombre_Producto" name="Nombre_Producto" required>
+
+            <label for="Descripcion_Producto">Descripción del Producto:</label>
+            <textarea id="Descripcion_Producto" name="Descripcion_Producto" required></textarea>
+
+            <label for="Precio_Unitario">Precio Unitario:</label>
+            <input type="text" id="Precio_Unitario" name="Precio_Unitario" required>
+
+            <label for="Stock">Stock:</label>
+            <input type="number" id="Stock" name="Stock" required>
+
+            <label for="Imagen_Producto">Imagen del Producto:</label>
+            <input type="file" id="Imagen_Producto" name="Imagen_Producto" required>
+
+            <label for="Categorias_idCategorias">Categoría:</label>
+            <select id="Categorias_idCategorias" name="Categorias_idCategorias" required>
+                <option value="1">Moda</option>
+                <option value="2">Calzado</option>
+                <option value="3">Belleza</option>
+            </select>
+
+            <label for="Subastas_idSubastas">Subasta:</label>
+            <input type="number" id="Subastas_idSubastas" name="Subastas_idSubastas" required>
+
+            <label for="Carrito_Compras_idCarrito_Compras">Carrito de Compras:</label>
+            <input type="number" id="Carrito_Compras_idCarrito_Compras" name="Carrito_Compras_idCarrito_Compras" required>
+
+            <label for="Favoritos_idFavoritos">Favorito:</label>
+            <input type="number" id="Favoritos_idFavoritos" name="Favoritos_idFavoritos" required>
+
+            <label for="Detalle_Orden_idDetalle_Orden">Detalle Orden:</label>
+            <input type="number" id="Detalle_Orden_idDetalle_Orden" name="Detalle_Orden_idDetalle_Orden" required>
+
+            <label for="Inventario_idInventario">Inventario:</label>
+            <input type="number" id="Inventario_idInventario" name="Inventario_idInventario" required>
+
+            <input type="submit" value="Agregar Producto">
+        </form>
+    </div>
+
+</body>
+</html>
