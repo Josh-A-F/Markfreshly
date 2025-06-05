@@ -41,6 +41,12 @@
         h2 {
             margin-bottom: 20px;
         }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
     </style>
 
     <script>
@@ -50,35 +56,76 @@
                 e.preventDefault();
             }
         }
+
+        function setFechaHora() {
+            const now = new Date();
+            const fechaHora = now.toISOString().slice(0, 19).replace('T', ' ');
+            document.getElementById('fecha_registro').value = fechaHora;
+        }
+
+        function validarContrasena() {
+            const password = document.getElementsByName('contraseña')[0].value;
+            const error = document.getElementById('password-error');
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            if (!hasUpperCase || !hasNumber) {
+                error.style.display = 'block';
+                return false;
+            } else {
+                error.style.display = 'none';
+                return true;
+            }
+        }
+
+        function validarFormulario(event) {
+            if (!validarContrasena()) {
+                event.preventDefault();
+            }
+        }
     </script>
 </head>
-<body>
+<body onload="setFechaHora()">
     <h2>Registro de Usuario</h2>
-    <form action="registro.php" method="POST">
+    <form action="registro.php" method="POST" onsubmit="validarFormulario(event); setFechaHora()">
         <input type="hidden" name="usuario" value="1">
+        <input type="hidden" name="fecha_registro" id="fecha_registro">
 
-        <input type="text" name="nombre" placeholder="Nombre" required><br>
-        <input type="text" name="apellido" placeholder="Apellido" required><br>
+        <select name="id_rol" required>
+            <option value="">Selecciona un rol</option>
+            <option value="1">Cliente</option>
+            <option value="2">Administrador</option>
+            <option value="3">Empresa</option>
+        </select><br>
+
+        <select name="tipo_documento" required>
+            <option value="">Selecciona tipo de documento</option>
+            <option value="CC">CC</option>
+            <option value="TI">TI</option>
+            <option value="CE">CE</option>
+        </select><br>
+
+        <input type="text" name="numero_documento" placeholder="Número de documento" required 
+               pattern="[0-9]{8,15}" 
+               title="Solo números. Mínimo 8 y máximo 15 dígitos"
+               onkeypress="soloNumeros(event)"><br>
+
+        <input type="text" name="Nombre_Usuario" placeholder="Nombre" required><br>
+        <input type="text" name="Apellido_Usuario" placeholder="Apellido" required><br>
 
         <input type="email" name="correo" placeholder="Correo electrónico" required 
-               pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
+               pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" 
                title="El correo debe ser de tipo @gmail.com"><br>
-
-        <input type="text" name="direccion" placeholder="Dirección" required><br>
 
         <input type="text" name="celular" placeholder="Celular" required 
                pattern="[0-9]{7,15}" 
                title="Solo números. Mínimo 7 y máximo 15 dígitos"
                onkeypress="soloNumeros(event)"><br>
 
-        <input type="password" name="contraseña" placeholder="Contraseña" required><br>
-
-        <select name="id_rol" required>
-            <option value="">Selecciona un rol</option>
-            <option value="1">Administrador</option>
-            <option value="2">Explorador</option>
-            <option value="3">Emprendedor</option>
-        </select><br>
+        <input type="password" name="contraseña" placeholder="Contraseña" required 
+               pattern="^(?=.*[A-Z])(?=.*\d).+$" 
+               title="La contraseña debe contener al menos una letra mayúscula y un número"
+               oninput="validarContrasena()"><br>
+        <span id="password-error" class="error">La contraseña debe contener al menos una letra mayúscula y un número</span><br>
 
         <input type="submit" value="Registrar">
     </form>
