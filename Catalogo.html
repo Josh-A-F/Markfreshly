@@ -1,1 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff; /* Fondo blanco */
+        }
+        .top-bar {
+            background-color: #28a745; /* Barra verde */
+            height: 60px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 20px; /* Ajuste por la barra fija */
+            padding: 20px;
+        }
+        .header {
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            outline: none;
+        }
+        .search-bar button {
+            background-color: #3483fa;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #2968c8;
+        }
+        .catalog {
+            display: flex;
+        }
+        .filters {
+            width: 250px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-right: 20px;
+        }
+        .filters h3 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .filters label {
+            display: block;
+            margin: 10px 0;
+        }
+        .product-section {
+            margin-bottom: 40px;
+        }
+        .product-section h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .products {
+            flex: 1;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 20px;
+            overflow-x: auto; /* Scroll horizontal */
+            padding-bottom: 10px; /* Espacio para el scroll */
+            align-items: stretch;
+        }
+        .products::-webkit-scrollbar {
+            height: 8px;
+        }
+        .products::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 4px;
+        }
+        .products::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+        .product-card {
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+            flex: 0 0 calc(25% - 15px); /* 4 productos por fila, ajustado por gap */
+            min-width: 250px; /* Ancho mínimo para consistencia */
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-card img {
+            max-width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        .product-card h4 {
+            font-size: 16px;
+            margin: 10px 0;
+            color: #333;
+        }
+        .product-card p {
+            font-size: 18px;
+            color: #3483fa;
+            margin: 10px 0;
+        }
+        .product-card button {
+            background-color: #3483fa;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .product-card button:hover {
+            background-color: #2968c8;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar"></div>
+    <div class="header">
+        <div class="container">
+            <h1>Catálogo de Productos</h1>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Buscar productos...">
+                <button onclick="searchProducts()">Buscar</button>
+            </div>
+        </div>
+    </div>
+    <div class="container catalog">
+        <div class="filters">
+            <h3>Filtros</h3>
+            <label><input type="checkbox" onchange="filterProducts()"> Electrónica</label>
+            <label><input type="checkbox" onchange="filterProducts()"> Ropa</label>
+            <label><input type="checkbox" onchange="filterProducts()"> Hogar</label>
+            <label>
+                Precio máximo:
+                <input type="number" id="maxPrice" placeholder="5000" onchange="filterProducts()">
+            </label>
+        </div>
+        <div class="product-sections">
+            <div class="product-section">
+                <h2>Electrónica Destacada</h2>
+                <div class="products" id="productList1">
+                    <div class="product-card" data-category="Electrónica" data-price="999">
+                        <img src="https://via.placeholder.com/150" alt="Producto 1">
+                        <h4>Smartphone XYZ</h4>
+                        <p>$999</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="1499">
+                        <img src="https://via.placeholder.com/150" alt="Producto 2">
+                        <h4>Laptop Ultra</h4>
+                        <p>$1499</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="499">
+                        <img src="https://via.placeholder.com/150" alt="Producto 3">
+                        <h4>Auriculares Bluetooth</h4>
+                        <p>$499</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="799">
+                        <img src="https://via.placeholder.com/150" alt="Producto 4">
+                        <h4>Tableta Digital</h4>
+                        <p>$799</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="299">
+                        <img src="https://via.placeholder.com/150" alt="Producto 5">
+                        <h4>Smartwatch</h4>
+                        <p>$299</p>
+                        <button>Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-section">
+                <h2>Moda Popular</h2>
+                <div class="products" id="productList2">
+                    <div class="product-card" data-category="Ropa" data-price="49">
+                        <img src="https://via.placeholder.com/150" alt="Producto 6">
+                        <h4>Camiseta Casual</h4>
+                        <p>$49</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="79">
+                        <img src="https://via.placeholder.com/150" alt="Producto 7">
+                        <h4>Jeans Clásicos</h4>
+                        <p>$79</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="29">
+                        <img src="https://via.placeholder.com/150" alt="Producto 8">
+                        <h4>Gorra Deportiva</h4>
+                        <p>$29</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="59">
+                        <img src="https://via.placeholder.com/150" alt="Producto 9">
+                        <h4>Sudadera Casual</h4>
+                        <p>$59</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="89">
+                        <img src="https://via.placeholder.com/150" alt="Producto 10">
+                        <h4>Chaqueta de Cuero</h4>
+                        <p>$89</p>
+                        <button>Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-section">
+                <h2>Hogar Esencial</h2>
+                <div class="products" id="productList3">
+                    <div class="product-card" data-category="Hogar" data-price="199">
+                        <img src="https://via.placeholder.com/150" alt="Producto 11">
+                        <h4>Lámpara Moderna</h4>
+                        <p>$199</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Hogar" data-price="299">
+                        <img src="https://via.placeholder.com/150" alt="Producto 12">
+                        <h4>Juego de Sábanas</h4>
+                        <p>$299</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Hogar" data-price="99">
+                        <img src="https://via.placeholder.com/150" alt="Producto 13">
+                        <h4>Jarrón Decorativo</h4>
+                        <p>$99</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Hogar" data-price="399">
+                        <img src="https://via.placeholder.com/150" alt="Producto 14">
+                        <h4>Cafetera Eléctrica</h4>
+                        <p>$399</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Hogar" data-price="149">
+                        <img src="https://via.placeholder.com/150" alt="Producto 15">
+                        <h4>Juego de Cubiertos</h4>
+                        <p>$149</p>
+                        <button>Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-section">
+                <h2>Accesorios Tecnológicos</h2>
+                <div class="products" id="productList4">
+                    <div class="product-card" data-category="Electrónica" data-price="49">
+                        <img src="https://via.placeholder.com/150" alt="Producto 16">
+                        <h4>Cargador Rápido</h4>
+                        <p>$49</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="79">
+                        <img src="https://via.placeholder.com/150" alt="Producto 17">
+                        <h4>Batería Externa</h4>
+                        <p>$79</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="29">
+                        <img src="https://via.placeholder.com/150" alt="Producto 18">
+                        <h4>Cable USB-C</h4>
+                        <p>$29</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="99">
+                        <img src="https://via.placeholder.com/150" alt="Producto 19">
+                        <h4>Teclado Inalámbrico</h4>
+                        <p>$99</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Electrónica" data-price="69">
+                        <img src="https://via.placeholder.com/150" alt="Producto 20">
+                        <h4>Mouse Ergonómico</h4>
+                        <p>$69</p>
+                        <button>Comprar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-section">
+                <h2>Moda de Temporada</h2>
+                <div class="products" id="productList5">
+                    <div class="product-card" data-category="Ropa" data-price="39">
+                        <img src="https://via.placeholder.com/150" alt="Producto 21">
+                        <h4>Bufanda de Lana</h4>
+                        <p>$39</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="99">
+                        <img src="https://via.placeholder.com/150" alt="Producto 22">
+                        <h4>Abrigo Invierno</h4>
+                        <p>$99</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="49">
+                        <img src="https://via.placeholder.com/150" alt="Producto 23">
+                        <h4>Pantalones Chinos</h4>
+                        <p>$49</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="29">
+                        <img src="https://via.placeholder.com/150" alt="Producto 24">
+                        <h4>Calcetines de Algodón</h4>
+                        <p>$29</p>
+                        <button>Comprar</button>
+                    </div>
+                    <div class="product-card" data-category="Ropa" data-price="59">
+                        <img src="https://via.placeholder.com/150" alt="Producto 25">
+                        <h4>Sombrero de Moda</h4>
+                        <p>$59</p>
+                        <button>Comprar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function searchProducts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(product => {
+                const title = product.querySelector('h4').textContent.toLowerCase();
+                product.style.display = title.includes(searchTerm) ? '' : 'none';
+            });
+        }
 
+        function filterProducts() {
+            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+            const selectedCategories = Array.from(document.querySelectorAll('.filters input[type="checkbox"]:checked'))
+                .map(cb => cb.parentElement.textContent.trim());
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                const price = parseFloat(product.dataset.price);
+                const category = product.dataset.category;
+                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category);
+                const matchesPrice = price <= maxPrice;
+                product.style.display = matchesCategory && matchesPrice ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
