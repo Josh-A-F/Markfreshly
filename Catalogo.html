@@ -4,371 +4,668 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Productos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #ffffff; /* Fondo blanco */
+            background-color: #f4f4f4;
         }
-        .top-bar {
-            background-color: #28a745; /* Barra verde */
-            height: 60px;
-            width: 100%;
-            position: fixed;
+        .app-bar {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: sticky;
             top: 0;
             z-index: 1000;
         }
-        .container {
-            max-width: 1200px;
-            margin: 80px auto 20px; /* Ajuste por la barra fija */
-            padding: 20px;
-        }
-        .header {
-            background-color: #fff;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-            margin-bottom: 20px;
-        }
-        .search-bar input {
-            flex: 1;
-            border: none;
-            padding: 10px;
-            outline: none;
-        }
-        .search-bar button {
-            background-color: #3483fa;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+        .app-bar .store-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 20px;
             cursor: pointer;
         }
-        .search-bar button:hover {
-            background-color: #2968c8;
+        .app-bar .search-bar {
+            flex: 1;
+            max-width: 400px;
+            margin: 0 20px;
         }
-        .catalog {
-            display: flex;
-        }
-        .filters {
-            width: 250px;
-            background-color: #fff;
-            padding: 20px;
+        .app-bar input {
+            width: 100%;
+            padding: 8px;
+            border: none;
             border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-right: 20px;
+            font-size: 14px;
         }
-        .filters h3 {
+        .app-bar .nav-buttons button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+            position: relative;
+        }
+        .app-bar .nav-buttons button:hover {
+            color: #f0f0f0;
+        }
+        .app-bar .nav-buttons .notification-btn {
+            font-size: 20px;
+        }
+        .app-bar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .app-bar .user-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: contain;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .categories {
+            width: 200px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .categories h2 {
             margin-top: 0;
             font-size: 18px;
         }
-        .filters label {
-            display: block;
-            margin: 10px 0;
+        .categories ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
-        .product-section {
-            margin-bottom: 40px;
+        .categories li {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            font-size: 14px;
         }
-        .product-section h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: #333;
+        .categories li:hover {
+            background-color: #f0f0f0;
         }
-        .products {
+        .categories li .active {
+            background-color: #007bff;
+            color: white;
+        }
+        .catalog {
             flex: 1;
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 20px;
-            overflow-x: auto; /* Scroll horizontal */
-            padding-bottom: 10px; /* Espacio para el scroll */
-            align-items: stretch;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            max-height: 600px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 2px;
+            overflow: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        .products::-webkit-scrollbar {
-            height: 8px;
-        }
-        .products::-webkit-scrollbar-thumb {
-            background-color: #888;
-            border-radius: 4px;
-        }
-        .products::-webkit-scrollbar-thumb:hover {
-            background-color: #555;
-        }
-        .product-card {
+        .product {
             background-color: #fff;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
             text-align: center;
             transition: transform 0.2s;
-            flex: 0 0 calc(25% - 15px); /* 4 productos por fila, ajustado por gap */
-            min-width: 250px; /* Ancho mínimo para consistencia */
         }
-        .product-card:hover {
-            transform: translateY(-5px);
+        .product:hover {
+            transform: scale(1.05);
         }
-        .product-card img {
-            max-width: 100%;
-            height: 150px;
-            object-fit: contain;
+        .product img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
             margin-bottom: 10px;
         }
-        .product-card h4 {
+        .product-info h3 {
+            margin: 0;
             font-size: 16px;
-            margin: 10px 0;
             color: #333;
         }
-        .product-card p {
-            font-size: 18px;
-            color: #3483fa;
-            margin: 10px 0;
+        .product-info p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #555;
         }
-        .product-card button {
-            background-color: #3483fa;
-            color: white;
-            border: none;
+        .section {
+            margin-top: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            margin-top: 0;
+        }
+        .cart-item, .favorite-item {
+            display: flex;
+            justify-content: space-between;
             padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item:last-child, .favorite-item:last-child {
+            border-bottom: none;
+        }
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border: none;
             border-radius: 4px;
             cursor: pointer;
-            width: 100%;
         }
-        .product-card button:hover {
-            background-color: #2968c8;
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+        #notificationMessage {
+            display: none;
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 1200px) {
+            .catalog {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+        @media (max-width: 800px) {
+            .catalog {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .container {
+                flex-direction: column;
+            }
+            .categories {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                max-height: none;
+                overflow-y: visible;
+            }
+            .categories ul {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .categories li {
+                flex: 1;
+                text-align: center;
+                min-width: 100px;
+            }
+        }
+        @media (max-width: 600px) {
+            .catalog {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 400px) {
+            .catalog {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="top-bar"></div>
-    <div class="header">
-        <div class="container">
+    <div class="app-bar">
+        <div class="store-name" onclick="showSection('catalog')">Mi Tienda</div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar productos...">
+        </div>
+        <div class="nav-buttons">
+            <button onclick="showSection('favorites')">Favoritos</button>
+            <button onclick="showSection('cart')">Carrito</button>
+            <button class="notification-btn" onclick="showNotifications()"><i class="fas fa-bell"></i></button>
+        </div>
+        <div class="user-info">
+            <span>Juan Pérez</span>
+            <img src="https://via.placeholder.com/32" alt="Foto de usuario">
+        </div>
+    </div>
+    <div id="notificationMessage">¡Tienes 2 nuevas notificaciones!</div>
+    <div class="container">
+        <div class="categories">
+            <h2>Categorías</h2>
+            <ul>
+                <li class="active" onclick="filterByCategory('all')">Todas</li>
+                <li onclick="filterByCategory('Electrónica')">Electrónica</li>
+                <li onclick="filterByCategory('Ropa')">Moda</li>
+                <li onclick="filterByCategory('Hogar')">Hogar</li>
+                <li onclick="filterByCategory('Alimentos')">Comida</li>
+                <li onclick="filterByCategory('Jardinería')">Jardinería</li>
+                <li onclick="filterByCategory('Vehículos')">Vehículos</li>
+                <li onclick="filterByCategory('Mascotas')">Mascotas</li>
+                <li onclick="filterByCategory('Bebés')">Bebés</li>
+                <li onclick="filterByCategory('Belleza y Cuidado Personal')">Belleza</li>
+                <li onclick="filterByCategory('Cámaras y Accesorios')">Cámaras</li>
+                <li onclick="filterByCategory('Computación')">Computación</li>
+                <li onclick="filterByCategory('Aseo')">Aseo</li>
+                <li onclick="filterByCategory('Deportes')">Deportes</li>
+                <li onclick="filterByCategory('Construcción')">Construcción</li>
+                <li onclick="filterByCategory('Juguetes')">Juguetes</li>
+                <li onclick="filterByCategory('Música')">Música</li>
+                <li onclick="filterByCategory('Recuerdos')">Recuerdos</li>
+                <li onclick="filterByCategory('Relojes')">Relojes</li>
+                <li onclick="filterByCategory('Joyas')">Joyas</li>
+                <li onclick="filterByCategory('Salud')">Salud</li>
+                <li onclick="filterByCategory('Servicios')">Servicios</li>
+            </ul>
+        </div>
+        <div class="catalog-container">
             <h1>Catálogo de Productos</h1>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Buscar productos...">
-                <button onclick="searchProducts()">Buscar</button>
+            <div class="catalog" id="catalog">
             </div>
+        </div>
+        <div class="section" id="cart" style="display: none;">
+            <h2>Carrito de Compras</h2>
+            <div id="cartItems"></div>
+        </div>
+        <div class="section" id="favorites" style="display: none;">
+            <h2>Favoritos</h2>
+            <div id="favoriteItems"></div>
         </div>
     </div>
-    <div class="container catalog">
-        <div class="filters">
-            <h3>Filtros</h3>
-            <label><input type="checkbox" onchange="filterProducts()"> Electrónica</label>
-            <label><input type="checkbox" onchange="filterProducts()"> Ropa</label>
-            <label><input type="checkbox" onchange="filterProducts()"> Hogar</label>
-            <label>
-                Precio máximo:
-                <input type="number" id="maxPrice" placeholder="5000" onchange="filterProducts()">
-            </label>
-        </div>
-        <div class="product-sections">
-            <div class="product-section">
-                <h2>Electrónica Destacada</h2>
-                <div class="products" id="productList1">
-                    <div class="product-card" data-category="Electrónica" data-price="999">
-                        <img src="https://via.placeholder.com/150" alt="Producto 1">
-                        <h4>Smartphone XYZ</h4>
-                        <p>$999</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="1499">
-                        <img src="https://via.placeholder.com/150" alt="Producto 2">
-                        <h4>Laptop Ultra</h4>
-                        <p>$1499</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="499">
-                        <img src="https://via.placeholder.com/150" alt="Producto 3">
-                        <h4>Auriculares Bluetooth</h4>
-                        <p>$499</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="799">
-                        <img src="https://via.placeholder.com/150" alt="Producto 4">
-                        <h4>Tableta Digital</h4>
-                        <p>$799</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="299">
-                        <img src="https://via.placeholder.com/150" alt="Producto 5">
-                        <h4>Smartwatch</h4>
-                        <p>$299</p>
-                        <button>Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-section">
-                <h2>Moda Popular</h2>
-                <div class="products" id="productList2">
-                    <div class="product-card" data-category="Ropa" data-price="49">
-                        <img src="https://via.placeholder.com/150" alt="Producto 6">
-                        <h4>Camiseta Casual</h4>
-                        <p>$49</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="79">
-                        <img src="https://via.placeholder.com/150" alt="Producto 7">
-                        <h4>Jeans Clásicos</h4>
-                        <p>$79</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="29">
-                        <img src="https://via.placeholder.com/150" alt="Producto 8">
-                        <h4>Gorra Deportiva</h4>
-                        <p>$29</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="59">
-                        <img src="https://via.placeholder.com/150" alt="Producto 9">
-                        <h4>Sudadera Casual</h4>
-                        <p>$59</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="89">
-                        <img src="https://via.placeholder.com/150" alt="Producto 10">
-                        <h4>Chaqueta de Cuero</h4>
-                        <p>$89</p>
-                        <button>Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-section">
-                <h2>Hogar Esencial</h2>
-                <div class="products" id="productList3">
-                    <div class="product-card" data-category="Hogar" data-price="199">
-                        <img src="https://via.placeholder.com/150" alt="Producto 11">
-                        <h4>Lámpara Moderna</h4>
-                        <p>$199</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Hogar" data-price="299">
-                        <img src="https://via.placeholder.com/150" alt="Producto 12">
-                        <h4>Juego de Sábanas</h4>
-                        <p>$299</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Hogar" data-price="99">
-                        <img src="https://via.placeholder.com/150" alt="Producto 13">
-                        <h4>Jarrón Decorativo</h4>
-                        <p>$99</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Hogar" data-price="399">
-                        <img src="https://via.placeholder.com/150" alt="Producto 14">
-                        <h4>Cafetera Eléctrica</h4>
-                        <p>$399</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Hogar" data-price="149">
-                        <img src="https://via.placeholder.com/150" alt="Producto 15">
-                        <h4>Juego de Cubiertos</h4>
-                        <p>$149</p>
-                        <button>Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-section">
-                <h2>Accesorios Tecnológicos</h2>
-                <div class="products" id="productList4">
-                    <div class="product-card" data-category="Electrónica" data-price="49">
-                        <img src="https://via.placeholder.com/150" alt="Producto 16">
-                        <h4>Cargador Rápido</h4>
-                        <p>$49</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="79">
-                        <img src="https://via.placeholder.com/150" alt="Producto 17">
-                        <h4>Batería Externa</h4>
-                        <p>$79</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="29">
-                        <img src="https://via.placeholder.com/150" alt="Producto 18">
-                        <h4>Cable USB-C</h4>
-                        <p>$29</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="99">
-                        <img src="https://via.placeholder.com/150" alt="Producto 19">
-                        <h4>Teclado Inalámbrico</h4>
-                        <p>$99</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Electrónica" data-price="69">
-                        <img src="https://via.placeholder.com/150" alt="Producto 20">
-                        <h4>Mouse Ergonómico</h4>
-                        <p>$69</p>
-                        <button>Comprar</button>
-                    </div>
-                </div>
-            </div>
-            <div class="product-section">
-                <h2>Moda de Temporada</h2>
-                <div class="products" id="productList5">
-                    <div class="product-card" data-category="Ropa" data-price="39">
-                        <img src="https://via.placeholder.com/150" alt="Producto 21">
-                        <h4>Bufanda de Lana</h4>
-                        <p>$39</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="99">
-                        <img src="https://via.placeholder.com/150" alt="Producto 22">
-                        <h4>Abrigo Invierno</h4>
-                        <p>$99</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="49">
-                        <img src="https://via.placeholder.com/150" alt="Producto 23">
-                        <h4>Pantalones Chinos</h4>
-                        <p>$49</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="29">
-                        <img src="https://via.placeholder.com/150" alt="Producto 24">
-                        <h4>Calcetines de Algodón</h4>
-                        <p>$29</p>
-                        <button>Comprar</button>
-                    </div>
-                    <div class="product-card" data-category="Ropa" data-price="59">
-                        <img src="https://via.placeholder.com/150" alt="Producto 25">
-                        <h4>Sombrero de Moda</h4>
-                        <p>$59</p>
-                        <button>Comprar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <script>
-        function searchProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const products = document.querySelectorAll('.product-card');
-            products.forEach(product => {
-                const title = product.querySelector('h4').textContent.toLowerCase();
-                product.style.display = title.includes(searchTerm) ? '' : 'none';
+        const products = [
+            { id: 1, name: "Smartphone X", price: 299.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 5, name: "Auriculares Bluetooth", price: 79.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 7, name: "Laptop Pro", price: 1299.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 11, name: "Smartwatch Fitness", price: 199.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 15, name: "Tablet 10 Pulgadas", price: 249.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 19, name: "Cámara Digital", price: 499.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 23, name: "Teclado Mecánico", price: 89.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 27, name: "Monitor 4K", price: 399.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 31, name: "Altavoces Bluetooth", price: 59.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 35, name: "Mouse Inalámbrico", price: 24.99, category: "Electrónica", image: "https://via.placeholder.com/150" },
+            { id: 2, name: "Camiseta Azul", price: 19.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 6, name: "Vestido Floral", price: 39.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 8, name: "Pantalones Vaqueros", price: 49.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 12, name: "Chaqueta de Cuero", price: 89.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 16, name: "Zapatillas Deportivas", price: 59.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 20, name: "Bufanda de Lana", price: 15.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 24, name: "Sombrero de Verano", price: 12.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 28, name: "Sudadera Gris", price: 29.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 32, name: "Falda Plisada", price: 34.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 36, name: "Cinturón de Cuero", price: 19.99, category: "Ropa", image: "https://via.placeholder.com/150" },
+            { id: 3, name: "Sofá Moderno", price: 499.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 9, name: "Mesa de Comedor", price: 299.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 13, name: "Lámpara de Mesa", price: 29.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 17, name: "Cama Doble", price: 399.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 21, name: "Espejo de Pared", price: 49.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 25, name: "Sillón Reclinable", price: 349.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 29, name: "Cortinas Modernas", price: 39.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 33, name: "Alfombra Persa", price: 199.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 37, name: "Estantería de Madera", price: 89.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 41, name: "Cojín Decorativo", price: 19.99, category: "Hogar", image: "https://via.placeholder.com/150" },
+            { id: 4, name: "Cereal Integral", price: 5.99, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 10, name: "Galletas de Avena", price: 3.99, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 14, name: "Jugo de Naranja", price: 2.99, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 18, name: "Arroz Integral", price: 4.49, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 22, name: "Pasta Italiana", price: 2.49, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 26, name: "Mermelada de Fresa", price: 3.29, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 30, name: "Café Molido", price: 6.99, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 34, name: "Leche Descremada", price: 2.79, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 38, name: "Aceite de Oliva", price: 7.99, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 42, name: "Miel Orgánica", price: 9.99, category: "Alimentos", image: "https://via.placeholder.com/150" },
+            { id: 43, name: "Maceta de Cerámica", price: 15.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 44, name: "Tijeras de Podar", price: 12.49, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 45, name: "Sustrato Universal", price: 8.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 46, name: "Regadera 5L", price: 9.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 47, name: "Semillas de Rosas", price: 3.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 48, name: "Pala de Jardín", price: 14.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 49, name: "Manguera 10m", price: 19.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 50, name: "Fertilizante Líquido", price: 7.49, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 51, name: "Guantes de Jardinería", price: 5.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 52, name: "Soporte para Plantas", price: 12.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 53, name: "Insecticida Natural", price: 10.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 54, name: "Kit de Herramientas Jardín", price: 29.99, category: "Jardinería", image: "https://via.placeholder.com/150" },
+            { id: 55, name: "Aceite de Motor 5W-30", price: 29.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 56, name: "Llantas 16 Pulgadas", price: 99.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 57, name: "Batería de Coche", price: 79.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 58, name: "Funda para Asiento", price: 24.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 59, name: "Cargador USB para Coche", price: 12.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 60, name: "Limpia Parabrisas", price: 15.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 61, name: "Alfombrilla de Coche", price: 19.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 62, name: "Compresor de Aire", price: 39.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 63, name: "Caja de Herramientas Auto", price: 49.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 64, name: "Portabicicletas", price: 69.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 65, name: "Lubricante Multiusos", price: 8.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 66, name: "Cubierta para Coche", price: 34.99, category: "Vehículos", image: "https://via.placeholder.com/150" },
+            { id: 67, name: "Comida para Perros 10kg", price: 29.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 68, name: "Collar para Gatos", price: 7.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 69, name: "Cama para Mascotas", price: 19.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 70, name: "Juguete para Perros", price: 9.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 71, name: "Arena para Gatos 5kg", price: 12.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 72, name: "Correa Retráctil", price: 14.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 73, name: "Bebedero Automático", price: 24.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 74, name: "Cepillo para Mascotas", price: 8.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 75, name: "Casa para Gatos", price: 39.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 76, name: "Suplemento para Perros", price: 15.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 77, name: "Rascador para Gatos", price: 29.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 78, name: "Transportadora Pequeña", price: 34.99, category: "Mascotas", image: "https://via.placeholder.com/150" },
+            { id: 79, name: "Pañales Talla 2", price: 19.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 80, name: "Cochecito de Bebé", price: 149.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 81, name: "Biberón 250ml", price: 9.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 82, name: "Silla de Comer", price: 69.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 83, name: "Ropa Bebé Conjunto", price: 14.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 84, name: "Chupete de Silicona", price: 4.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 85, name: "Cuna Portátil", price: 89.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 86, name: "Juguete Sonajero", price: 7.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 87, name: "Toallitas Húmedas", price: 5.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 88, name: "Monitor para Bebé", price: 59.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 89, name: "Manta para Bebé", price: 12.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 90, name: "Esterilizador de Biberones", price: 29.99, category: "Bebés", image: "https://via.placeholder.com/150" },
+            { id: 91, name: "Crema Hidratante", price: 14.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 92, name: "Champú Anticaspa", price: 9.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 93, name: "Perfume 50ml", price: 39.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 94, name: "Máscara de Pestañas", price: 12.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 95, name: "Exfoliante Facial", price: 10.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 96, name: "Lápiz Labial", price: 8.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 97, name: "Crema Solar SPF50", price: 15.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 98, name: "Desodorante Roll-On", price: 4.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 99, name: "Kit de Manicura", price: 19.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 100, name: "Tinte para Cabello", price: 7.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 101, name: "Aceite para Barba", price: 12.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 102, name: "Mascarilla Capilar", price: 11.99, category: "Belleza y Cuidado Personal", image: "https://via.placeholder.com/150" },
+            { id: 103, name: "Cámara Réflex", price: 599.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 104, name: "Lente 50mm", price: 199.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 105, name: "Trípode Ajustable", price: 39.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 106, name: "Bolsa para Cámara", price: 29.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 107, name: "Filtros UV", price: 19.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 108, name: "Cámara de Acción", price: 149.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 109, name: "Batería de Repuesto", price: 24.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 110, name: "Flash Externo", price: 89.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 111, name: "Tarjeta SD 64GB", price: 15.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 112, name: "Estabilizador Gimbal", price: 129.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 113, name: "Lente Macro", price: 249.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 114, name: "Kit de Limpieza Cámara", price: 9.99, category: "Cámaras y Accesorios", image: "https://via.placeholder.com/150" },
+            { id: 115, name: "Disco Duro Externo 1TB", price: 59.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 116, name: "Memoria RAM 16GB", price: 79.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 117, name: "Procesador i7", price: 299.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 118, name: "Tarjeta Gráfica", price: 399.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 119, name: "Teclado Inalámbrico", price: 29.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 120, name: "Monitor 27 Pulgadas", price: 199.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 121, name: "Mouse Gaming", price: 39.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 122, name: "SSD 500GB", price: 69.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 123, name: "Router Inalámbrico", price: 49.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 124, name: "Webcam HD", price: 34.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 125, name: "Auriculares Gaming", price: 59.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 126, name: "Carcasa para PC", price: 79.99, category: "Computación", image: "https://via.placeholder.com/150" },
+            { id: 127, name: "Detergente Líquido 3L", price: 9.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 128, name: "Escoba de Cerdas", price: 7.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 129, name: "Limpiavidrios 500ml", price: 4.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 130, name: "Esponja de Cocina", price: 2.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 131, name: "Desinfectante Spray", price: 6.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 132, name: "Mopa de Microfibra", price: 12.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 133, name: "Bolsas de Basura 50L", price: 5.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 134, name: "Limpiador Multiusos", price: 4.49, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 135, name: "Cepillo de Baño", price: 3.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 136, name: "Guantes de Limpieza", price: 2.49, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 137, name: "Fregona con Cubo", price: 19.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 138, name: "Quitamanchas Ropa", price: 8.99, category: "Aseo", image: "https://via.placeholder.com/150" },
+            { id: 139, name: "Balón de Fútbol", price: 19.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 140, name: "Zapatillas de Running", price: 69.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 141, name: "Bicicleta de Montaña", price: 299.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 142, name: "Guantes de Boxeo", price: 34.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 143, name: "Mancuernas 5kg", price: 29.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 144, name: "Esterilla de Yoga", price: 19.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 145, name: "Raqueta de Tenis", price: 49.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 146, name: "Balón de Baloncesto", price: 24.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 147, name: "Cuerda de Saltar", price: 9.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 148, name: "Casco para Bicicleta", price: 29.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 149, name: "Banda Elástica", price: 12.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 150, name: "Pesa Rusa 10kg", price: 39.99, category: "Deportes", image: "https://via.placeholder.com/150" },
+            { id: 151, name: "Taladro Eléctrico", price: 79.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 152, name: "Cemento 25kg", price: 9.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 153, name: "Martillo de Albañil", price: 14.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 154, name: "Pintura Blanca 4L", price: 24.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 155, name: "Sierra Manual", price: 19.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 156, name: "Cinta Métrica 5m", price: 7.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 157, name: "Ladrillos 10 Unidades", price: 12.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 158, name: "Destornillador Set", price: 15.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 159, name: "Nivel de Burbuja", price: 9.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 160, name: "Llana de Construcción", price: 11.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 161, name: "Guantes de Trabajo", price: 6.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 162, name: "Escalera 3 Peldaños", price: 49.99, category: "Construcción", image: "https://via.placeholder.com/150" },
+            { id: 175, name: "Set de Bloques", price: 19.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 176, name: "Muñeca Interactiva", price: 29.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 177, name: "Coche de Juguete", price: 14.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 178, name: "Pista de Carreras", price: 39.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 179, name: "Puzzle 100 Piezas", price: 9.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 180, name: "Pelota de Playa", price: 4.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 181, name: "Robot de Juguete", price: 24.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 182, name: "Juego de Mesa", price: 19.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 183, name: "Cocina de Juguete", price: 49.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 184, name: "Avión de Juguete", price: 12.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 185, name: "Set de Arte", price: 15.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 186, name: "Tren Eléctrico", price: 34.99, category: "Juguetes", image: "https://via.placeholder.com/150" },
+            { id: 187, name: "Guitarra Acústica", price: 99.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 188, name: "Teclado Electrónico", price: 149.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 189, name: "Auriculares Estudio", price: 59.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 190, name: "Micrófono de Condensador", price: 79.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 191, name: "Ukelele", price: 39.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 192, name: "Amplificador 20W", price: 89.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 193, name: "Cuerdas para Guitarra", price: 9.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 194, name: "Batería Electrónica", price: 299.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 195, name: "Flauta Dulce", price: 12.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 196, name: "Soporte para Partituras", price: 19.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 197, name: "Metronomo Digital", price: 24.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 198, name: "Armónica", price: 14.99, category: "Música", image: "https://via.placeholder.com/150" },
+            { id: 199, name: "Álbum de Fotos", price: 19.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 200, name: "Marco de Fotos", price: 12.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 201, name: "Caja de Recuerdos", price: 24.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 202, name: "Llavero Personalizado", price: 9.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 203, name: "Taza con Foto", price: 14.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 204, name: "Cuadro Decorativo", price: 29.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 205, name: "Imán Personalizado", price: 4.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 206, name: "Libro de Visitas", price: 19.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 207, name: "Camiseta con Estampado", price: 19.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 208, name: "Puzzle con Foto", price: 24.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 209, name: "Tarjetas de Felicitación", price: 7.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 210, name: "Cojín con Foto", price: 19.99, category: "Recuerdos", image: "https://via.placeholder.com/150" },
+            { id: 211, name: "Reloj Analógico", price: 49.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 212, name: "Reloj Deportivo", price: 39.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 213, name: "Reloj Inteligente", price: 99.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 214, name: "Reloj de Pared", price: 29.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 215, name: "Reloj de Lujo", price: 199.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 216, name: "Reloj Digital", price: 24.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 217, name: "Correa de Reloj", price: 14.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 218, name: "Reloj de Bolsillo", price: 59.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 219, name: "Reloj Infantil", price: 19.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 220, name: "Reloj Minimalista", price: 29.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 221, name: "Reloj de Madera", price: 79.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 222, name: "Reloj Automático", price: 149.99, category: "Relojes", image: "https://via.placeholder.com/150" },
+            { id: 223, name: "Collar de Plata", price: 49.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 224, name: "Aretes de Oro", price: 79.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 225, name: "Anillo de Diamante", price: 199.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 226, name: "Pulsera de Perlas", price: 39.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 227, name: "Cadena de Acero", price: 29.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 228, name: "Pendientes de Plata", price: 24.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 229, name: "Anillo de Plata", price: 34.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 230, name: "Collar con Colgante", price: 59.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 231, name: "Brazalete Dorado", price: 44.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 232, name: "Aretes de Cristal", price: 19.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 233, name: "Anillo de Compromiso", price: 299.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 234, name: "Pulsera de Cuero", price: 24.99, category: "Joyas", image: "https://via.placeholder.com/150" },
+            { id: 235, name: "Termómetro Digital", price: 19.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 236, name: "Tensiómetro", price: 39.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 237, name: "Mascarillas 50 Unidades", price: 14.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 238, name: "Oxímetro de Pulso", price: 24.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 239, name: "Banda Elástica Terapéutica", price: 12.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 240, name: "Suplemento Vitamínico", price: 19.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 241, name: "Almohadilla Térmica", price: 29.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 242, name: "Gel Antibacterial", price: 4.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 243, name: "Parche para Dolor", price: 9.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 244, name: "Inhalador Portátil", price: 49.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 245, name: "Kit de Primeros Auxilios", price: 19.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 246, name: "Muñequera Ortopédica", price: 14.99, category: "Salud", image: "https://via.placeholder.com/150" },
+            { id: 247, name: "Suscripción Streaming", price: 12.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 248, name: "Clase de Yoga Online", price: 9.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 249, name: "Limpieza de Hogar", price: 49.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 250, name: "Curso de Idiomas", price: 99.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 251, name: "Mantenimiento de PC", price: 39.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 252, name: "Sesión de Fotografía", price: 79.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 253, name: "Consulta Nutricional", price: 59.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 254, name: "Clase de Cocina", price: 29.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 255, name: "Reparación de Muebles", price: 69.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 256, name: "Jardinería Profesional", price: 89.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 257, name: "Clase de Música", price: 34.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+            { id: 258, name: "Entrenamiento Personal", price: 49.99, category: "Servicios", image: "https://via.placeholder.com/150" },
+        ];
+
+        let cart = [];
+        let favorites = [];
+        let selectedCategory = 'all';
+
+        function renderProducts(productList) {
+            const catalog = document.getElementById('catalog');
+            catalog.innerHTML = '';
+            productList.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>Categoría: ${product.category}</p>
+                        <p>Precio: $${product.price.toFixed(2)}</p>
+                    </div>
+                `;
+                catalog.appendChild(productDiv);
             });
         }
 
-        function filterProducts() {
-            const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
-            const selectedCategories = Array.from(document.querySelectorAll('.filters input[type="checkbox"]:checked'))
-                .map(cb => cb.parentElement.textContent.trim());
-            const products = document.querySelectorAll('.product-card');
-            
-            products.forEach(product => {
-                const price = parseFloat(product.dataset.price);
-                const category = product.dataset.category;
-                const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category);
-                const matchesPrice = price <= maxPrice;
-                product.style.display = matchesCategory && matchesPrice ? '' : 'none';
+        function filterByCategory(category) {
+            selectedCategory = category;
+            const categoryItems = document.querySelectorAll('.categories li');
+            categoryItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent === (category === 'all' ? 'Todas' : category)) {
+                    item.classList.add('active');
+                }
+            });
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            let filteredProducts = products;
+            if (category !== 'all') {
+                filteredProducts = products.filter(product => product.category === category);
+            }
+            if (searchTerm) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.name.toLowerCase().includes(searchTerm) ||
+                    product.category.toLowerCase().includes(searchTerm)
+                );
+            }
+            renderProducts(filteredProducts);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            let filteredProducts = products;
+            if (selectedCategory !== 'all') {
+                filteredProducts = products.filter(product => product.category === selectedCategory);
+            }
+            filteredProducts = filteredProducts.filter(product =>
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.category.toLowerCase().includes(searchTerm)
+            );
+            renderProducts(filteredProducts);
+        });
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!cart.find(item => item.id === productId)) {
+                cart.push(product);
+                renderCart();
+            }
+        }
+
+        function addToFavorites(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!favorites.find(item => item.id === productId)) {
+                favorites.push(product);
+                renderFavorites();
+            }
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = '';
+            cart.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'cart-item';
+                itemDiv.innerHTML = `
+                    <span>${item.name} - $${item.price.toFixed(2)}</span>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">Eliminar</button>
+                `;
+                cartItems.appendChild(itemDiv);
             });
         }
+
+        function renderFavorites() {
+            const favoriteItems = document.getElementById('favoriteItems');
+            favoriteItems.innerHTML = '';
+            favorites.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'favorite-item';
+                itemDiv.innerHTML = `
+                    <span>${item.name} - $${item.price.toFixed(2)}</span>
+                    <button class="remove-btn" onclick="removeFromFavorites(${item.id})">Eliminar</button>
+                `;
+                favoriteItems.appendChild(itemDiv);
+            });
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            renderCart();
+        }
+
+        function removeFromFavorites(productId) {
+            favorites = favorites.filter(item => item.id !== productId);
+            renderFavorites();
+        }
+
+        function showSection(sectionId) {
+            document.getElementById('catalog').parentElement.style.display = sectionId === 'catalog' ? 'block' : 'none';
+            document.getElementById('cart').style.display = sectionId === 'cart' ? 'block' : 'none';
+            document.getElementById('favorites').style.display = sectionId === 'favorites' ? 'block' : 'none';
+        }
+
+        function showNotifications() {
+            const notification = document.getElementById('notificationMessage');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        renderProducts(products);
     </script>
 </body>
 </html>
