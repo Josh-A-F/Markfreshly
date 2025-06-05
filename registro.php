@@ -24,13 +24,13 @@ class Usuario {
     public function setNumero_Documento($Numero_Documento) { $this->Numero_Documento = $Numero_Documento; }
     public function setNombre_Usuario($Nombre_Usuario) { $this->Nombre_Usuario = $Nombre_Usuario; }
     public function setApellido_Usuario($Apellido_Usuario) { $this->Apellido_Usuario = $Apellido_Usuario; }
-    public function setCorreo($correo) { $this->correo = $correo; }
-    public function setCelular($celular) { $this->celular = $celular; }
+    public function setCorreo($correo) { $this->Correo = $correo; }
+    public function setCelular($celular) { $this->Celular = $celular; }
     public function setFecha_Registro($Fecha_Registro) { $this->Fecha_Registro = $Fecha_Registro; }
 
     public function setContraseña($contraseña) {
         if (!empty($contraseña)) {
-            $this->contraseña = password_hash($contraseña, PASSWORD_BCRYPT);
+            $this->Contraseña = password_hash($contraseña, PASSWORD_BCRYPT);
         } else {
             throw new Exception("La contraseña no puede estar vacía.");
         }
